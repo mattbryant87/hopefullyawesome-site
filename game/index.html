@@ -264,31 +264,31 @@ document.addEventListener("click", ()=>{
 async function shareScreenshot(){
   shareHint.textContent = "Preparing screenshot…";
 
-  // Darken background
-ctx.fillStyle = "rgba(0,0,0,0.6)";
+// Dark overlay
+ctx.fillStyle = "rgba(0,0,0,0.65)";
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// Center text
 ctx.textAlign = "center";
+
+// Title (smaller, cleaner)
 ctx.fillStyle = "#ffffff";
+ctx.font = "bold 42px system-ui";
+ctx.fillText("HOPEFULLY FLAPPY", canvas.width / 2, canvas.height / 2 - 110);
 
-// Title
-ctx.font = "bold 60px system-ui";
-ctx.fillText("HOPEFULLY FLAPPY", canvas.width / 2, canvas.height / 2 - 120);
+// Big score (hero element)
+ctx.font = "bold 120px system-ui";
+ctx.fillStyle = "#01FFFF";
+ctx.fillText(score, canvas.width / 2, canvas.height / 2 + 10);
 
-// Subheading
-ctx.font = "bold 28px system-ui";
-ctx.fillText("I SCORED", canvas.width / 2, canvas.height / 2 - 40);
+// Points label
+ctx.font = "bold 32px system-ui";
+ctx.fillStyle = "#ffffff";
+ctx.fillText("POINTS!", canvas.width / 2, canvas.height / 2 + 60);
 
-// Big score
-ctx.font = "bold 110px system-ui";
-ctx.fillText(score, canvas.width / 2, canvas.height / 2 + 70);
-
-// Footer line
+// Footer challenge
 ctx.font = "20px system-ui";
 ctx.fillStyle = "rgba(255,255,255,0.8)";
-ctx.fillText("on hopefullyawesome.com/game", canvas.width / 2, canvas.height / 2 + 120);
-
+ctx.fillText("Can you beat it?", canvas.width / 2, canvas.height / 2 + 110);
   // Make sure the last frame is drawn (usually already is)
   // draw();
 
