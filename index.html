@@ -1,34 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hopefully Awesome</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #111;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-    p {
-      opacity: 0.7;
-    }
-  </style>
+  <meta name="description" content="Rebelling Against Cynicism — a positive place on the internet where we nerd out about the geeky things we love." />
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div>
-    <h1>Welcome to Hopefully Awesome</h1>
-    <p>Welcome Back to Yourself.</p>
-  </div>
+  <main class="wrap">
+
+    <header class="header">
+      <h1 class="title">Hopefully Awesome</h1>
+      <p class="tagline">Rebelling Against Cynicism</p>
+
+      <p class="sub">
+        Smallville. Digimon. Sailor Moon. Movies.
+        Because loving things is still cool.
+      </p>
+    </header>
+
+    <section class="grid">
+
+      <a class="tile" href="#">
+        <img class="tile-img" src="assets/smallville-circle.png" alt="Smallville">
+        <span class="tile-label">Smallville</span>
+      </a>
+
+      <a class="tile" href="#">
+        <img class="tile-img" src="assets/digimon-circle.png" alt="Digimon">
+        <span class="tile-label">Digimon</span>
+      </a>
+
+      <a class="tile" href="#">
+        <img class="tile-img" src="assets/sailormoon-circle.png" alt="Sailor Moon">
+        <span class="tile-label">Sailor Moon</span>
+      </a>
+
+      <a class="tile" href="#">
+        <img class="tile-img" src="assets/movies-circle.png" alt="Movies">
+        <span class="tile-label">Movies</span>
+      </a>
+
+    </section>
+
+    <footer class="footer">
+      <div class="footer-links">
+        <a class="link" href="#">YouTube</a>
+        <a class="link" href="#">Support</a>
+        <a class="link" href="#">Bluesky</a>
+      </div>
+
+      <p class="fineprint">© 2026 Hopefully Awesome</p>
+    </footer>
+
+  </main>
 </body>
 </html>
