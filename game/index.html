@@ -238,10 +238,18 @@ function update(){
     }
 
     if(!pipe.passed && pipe.x + pipeWidth < birdX){
-      pipe.passed = true;
-      score++;
-      document.getElementById("score").innerText = score;
-    }
+  pipe.passed = true;
+  score++;
+  document.getElementById("score").innerText = score;
+
+  // Track milestone scores
+  if (score === 10 || score === 25 || score === 50 || score === 75 || score === 100 || score === 125 || score === 150 || score === 175 || score === 200) {
+    track("score_milestone", { 
+      game: "hopefully_flappy",
+      score: score 
+    });
+  }
+}
   });
 
   if(birdY + birdSize > canvas.height || birdY < 0){
