@@ -191,6 +191,7 @@ function resetGame(){
   frame = 0;
   score = 0;
   gameOver = false;
+  document.getElementById("score").innerText = 0;
   pickRandomLogo();
   document.getElementById("restart").style.display="none";
   hideGameOver();
