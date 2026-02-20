@@ -140,6 +140,13 @@ let gap = 330;
 let frame = 0;
 let score = 0;
 let gameOver = false;
+let gameStarted = false;
+
+function track(eventName, params = {}) {
+  if (typeof gtag === "function") {
+    gtag("event", eventName, params);
+  }
+}
 
 const overlay = document.getElementById("overlay");
 const finalScoreEl = document.getElementById("finalScore");
@@ -149,6 +156,7 @@ const shareHint = document.getElementById("shareHint");
 function showGameOver(){
   finalScoreEl.textContent = `Score: ${score}`;
   overlay.style.display = "flex";
+  track("game_over", { game: "hopefully_flappy", score });
 }
 
 function hideGameOver(){
@@ -204,6 +212,7 @@ function resetGame(){
   pickRandomLogo();
   document.getElementById("restart").style.display="none";
   hideGameOver();
+  gameStarted = false;
 }
 
 function update(){
@@ -264,10 +273,18 @@ function loop(){
 }
 
 document.addEventListener("keydown", ()=>{
+  if (!gameStarted) {
+    gameStarted = true;
+    track("game_start", { game: "hopefully_flappy" });
+  }
   velocity = -9.5;
 });
 
 document.addEventListener("click", ()=>{
+  if (!gameStarted) {
+    gameStarted = true;
+    track("game_start", { game: "hopefully_flappy" });
+  }
   velocity = -9.5;
 });
 
@@ -419,7 +436,10 @@ ctx.textBaseline = "alphabetic";
   shareHint.textContent = "Opened screenshot in a new tab (save/share it there).";
 }
 
-shareBtn.addEventListener("click", shareScreenshot);
+shareBtn.addEventListener("click", () => {
+  track("share_score", { game: "hopefully_flappy", score });
+  shareScreenshot();
+});
   
 document.getElementById("restart").onclick = resetGame;
 
