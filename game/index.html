@@ -281,27 +281,47 @@ ctx.font = `bold ${titleSize}px system-ui`;
 ctx.fillStyle = "#ffffff";
 ctx.fillText("HOPEFULLY FLAPPY", centerX, centerY - 110);
 
-// --- Badge rays behind score ---
-const rayCount = 18;
-const innerR = Math.min(canvas.width * 0.11, 70);
-const outerR = Math.min(canvas.width * 0.22, 140);
-const rayY = centerY + 5;
+// --- Spotlight glow behind score ---
+const glowRadius = Math.min(canvas.width * 0.22, 140);
+const glowY = centerY + 5;
 
+const glow = ctx.createRadialGradient(centerX, glowY, 10, centerX, glowY, glowRadius);
+glow.addColorStop(0, "rgba(1,255,255,0.35)");
+glow.addColorStop(1, "rgba(1,255,255,0)");
+
+ctx.fillStyle = glow;
+ctx.beginPath();
+ctx.arc(centerX, glowY, glowRadius, 0, Math.PI * 2);
+ctx.fill();
+  
+// --- Award badge behind score ---
+const badgeR = Math.min(canvas.width * 0.18, 110);
+const badgeY = centerY + 5;
+
+// outer glow ring
 ctx.save();
-ctx.translate(centerX, rayY);
-ctx.globalAlpha = 0.22;
-ctx.fillStyle = "rgba(1,255,255,1)";
+ctx.shadowColor = "rgba(1,255,255,0.45)";
+ctx.shadowBlur = 22;
 
-for (let i = 0; i < rayCount; i++) {
-  ctx.rotate((Math.PI * 2) / rayCount);
-  ctx.beginPath();
-  ctx.moveTo(innerR, -6);
-  ctx.lineTo(outerR, 0);
-  ctx.lineTo(innerR, 6);
-  ctx.closePath();
-  ctx.fill();
-}
+ctx.fillStyle = "rgba(255,255,255,0.06)";
+ctx.beginPath();
+ctx.arc(centerX, badgeY, badgeR, 0, Math.PI * 2);
+ctx.fill();
 ctx.restore();
+
+// ring stroke
+ctx.lineWidth = 6;
+ctx.strokeStyle = "rgba(1,255,255,0.65)";
+ctx.beginPath();
+ctx.arc(centerX, badgeY, badgeR, 0, Math.PI * 2);
+ctx.stroke();
+
+// inner ring
+ctx.lineWidth = 2;
+ctx.strokeStyle = "rgba(255,255,255,0.35)";
+ctx.beginPath();
+ctx.arc(centerX, badgeY, badgeR - 12, 0, Math.PI * 2);
+ctx.stroke();
   
 // Big score scales larger
 const scoreSize = Math.min(canvas.width * 0.22, 120);
