@@ -9,11 +9,11 @@
 }
 
 *{ box-sizing: border-box; }
-html, body{ height: 100%; }
+html, body{ min-height: 100%; }
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 
@@ -35,7 +35,7 @@ body {
   margin: 0 auto;
   padding: 42px 18px 28px;
 
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
 
@@ -75,10 +75,11 @@ body {
 }
 
 .grid{
-  justify-content: center;
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-content: center;
+  justify-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   margin-top: 26px;
 }
 
@@ -93,6 +94,8 @@ body {
 }
 
 .tile{
+  width: 100%;
+  max-width: 240px;
   display: grid;
   place-items: center;
   gap: 12px;
