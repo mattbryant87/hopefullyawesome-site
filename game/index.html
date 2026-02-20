@@ -63,7 +63,7 @@ let birdX = 80;
 let birdSize = 50;
 let pipes = [];
 let pipeWidth = 70;
-let gap = 260;
+let gap = 330;
 let frame = 0;
 let score = 0;
 let gameOver = false;
@@ -112,7 +112,8 @@ function update(){
       document.getElementById("restart").style.display="block";
     }
 
-    if(pipe.x + pipeWidth === birdX){
+    if(!pipe.passed && pipe.x + pipeWidth < birdX){
+      pipe.passed = true;
       score++;
       document.getElementById("score").innerText = score;
     }
