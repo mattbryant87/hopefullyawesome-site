@@ -275,20 +275,32 @@ const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
 // --- Dynamic sizing ---
-const titleSize = Math.min(canvas.width * 0.08, 40);
-const scoreSize = Math.min(canvas.width * 0.22, 120);
-const labelSize = Math.min(canvas.width * 0.06, 28);
+const titleSize  = Math.min(canvas.width * 0.08, 40);
+const scoreSize  = Math.min(canvas.width * 0.22, 120);
+const pointsSize = Math.min(canvas.width * 0.07, 34);   // <-- POINTS sizing
+const bodySize   = Math.min(canvas.width * 0.055, 22);
+const urlSize    = Math.min(canvas.width * 0.05, 18);
 
-// Total vertical stack height (estimate)
+const gap1 = 22;
+const gap2 = 22;
+const gap3 = 16;
+const gap4 = 18;
+const gap5 = 18;
+
+// Badge radius based on score size
+const badgeR = scoreSize * 0.62;
+
+// Total vertical stack height (treat POINTS as part of the centered block)
 const stackHeight =
   titleSize +
-  20 +
-  scoreSize +
-  20 +
-  labelSize +
-  20 +
-  20 +   // "Can you beat it?"
-  18;    // URL
+  gap1 +
+  (badgeR * 2) +
+  gap2 +
+  pointsSize +
+  gap3 +
+  bodySize +
+  gap4 +
+  urlSize;
 
 let currentY = centerY - stackHeight / 2;
 
@@ -296,52 +308,71 @@ let currentY = centerY - stackHeight / 2;
 ctx.fillStyle = "#ffffff";
 ctx.font = `bold ${titleSize}px system-ui`;
 ctx.fillText("HOPEFULLY FLAPPY", centerX, currentY);
-currentY += titleSize + 25;
+currentY += titleSize + gap1;
 
-// ---- BADGE ----
-const badgeR = scoreSize * 0.6;
-const badgeCenterY = currentY + scoreSize / 2;
+// ---- BADGE (glow + glass combo) ----
+const badgeCenterY = currentY + badgeR;
 
-// glow
+// Outer glow (the punchy halo)
 ctx.save();
-ctx.shadowColor = "rgba(1,255,255,0.45)";
-ctx.shadowBlur = 25;
-ctx.fillStyle = "rgba(255,255,255,0.06)";
+ctx.shadowColor = "rgba(1,255,255,0.65)";
+ctx.shadowBlur = 30;
+ctx.fillStyle = "rgba(1,255,255,0.08)";
 ctx.beginPath();
-ctx.arc(centerX, badgeCenterY, badgeR, 0, Math.PI * 2);
+ctx.arc(centerX, badgeCenterY, badgeR + 2, 0, Math.PI * 2);
 ctx.fill();
 ctx.restore();
 
-// ring
-ctx.lineWidth = 6;
-ctx.strokeStyle = "rgba(1,255,255,0.7)";
+// Inner “glass” radial gradient (this is the missing nice depth)
+const g = ctx.createRadialGradient(
+  centerX - badgeR * 0.25, badgeCenterY - badgeR * 0.35, badgeR * 0.15,
+  centerX,                 badgeCenterY,                 badgeR
+);
+g.addColorStop(0, "rgba(255,255,255,0.18)");
+g.addColorStop(0.45, "rgba(255,255,255,0.08)");
+g.addColorStop(1, "rgba(0,0,0,0.35)");
+
+ctx.fillStyle = g;
+ctx.beginPath();
+ctx.arc(centerX, badgeCenterY, badgeR, 0, Math.PI * 2);
+ctx.fill();
+
+// Ring
+ctx.lineWidth = Math.max(5, badgeR * 0.08);
+ctx.strokeStyle = "rgba(1,255,255,0.85)";
 ctx.beginPath();
 ctx.arc(centerX, badgeCenterY, badgeR, 0, Math.PI * 2);
 ctx.stroke();
 
-// score
+// ---- SCORE ----
 ctx.fillStyle = "#01FFFF";
 ctx.font = `bold ${scoreSize}px system-ui`;
-ctx.fillText(score, centerX, badgeCenterY + scoreSize / 3);
+ctx.textBaseline = "middle";
+ctx.fillText(score, centerX, badgeCenterY);
 
-currentY += scoreSize + 25;
+// Move below badge
+currentY += (badgeR * 2) + gap2;
 
-// ---- POINTS ----
+// ---- POINTS! (now fully included in centered logic) ----
+ctx.textBaseline = "alphabetic";
 ctx.fillStyle = "#ffffff";
-ctx.font = `bold ${labelSize}px system-ui`;
+ctx.font = `bold ${pointsSize}px system-ui`;
 ctx.fillText("POINTS!", centerX, currentY);
-currentY += labelSize + 20;
+currentY += pointsSize + gap3;
 
 // ---- CHALLENGE ----
-ctx.font = "20px system-ui";
 ctx.fillStyle = "rgba(255,255,255,0.85)";
+ctx.font = `${bodySize}px system-ui`;
 ctx.fillText("Can you beat it?", centerX, currentY);
-currentY += 25;
+currentY += bodySize + gap4;
 
 // ---- URL ----
-ctx.font = "18px system-ui";
 ctx.fillStyle = "rgba(255,255,255,0.6)";
+ctx.font = `${urlSize}px system-ui`;
 ctx.fillText("hopefullyawesome.com/game", centerX, currentY);
+
+// reset baseline just in case other drawing happens later
+ctx.textBaseline = "alphabetic";
   // Make sure the last frame is drawn (usually already is)
   // draw();
 
