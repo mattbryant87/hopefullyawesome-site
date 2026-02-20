@@ -1,1 +1,161 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flappy HA</title>
+<style>
+body{
+  margin:0;
+  background:#0b0d14;
+  overflow:hidden;
+  font-family:system-ui;
+  color:white;
+}
 
+canvas{
+  display:block;
+  margin:0 auto;
+  background:#111;
+}
+
+#score{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:28px;
+  font-weight:bold;
+}
+
+#restart{
+  position:fixed;
+  top:60%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  display:none;
+  padding:12px 20px;
+  background:#01FFFF;
+  color:black;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="score">0</div>
+<button id="restart">Play Again</button>
+<canvas id="game"></canvas>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let gravity = 0.5;
+let velocity = 0;
+let birdY = canvas.height/2;
+let birdX = 80;
+let birdSize = 50;
+let pipes = [];
+let pipeWidth = 80;
+let gap = 200;
+let frame = 0;
+let score = 0;
+let gameOver = false;
+
+const logo = new Image();
+logo.src = "/assets/ha-main-logo-2026.png";
+
+function spawnPipe(){
+  let topHeight = Math.random() * (canvas.height - gap - 200) + 50;
+  pipes.push({
+    x: canvas.width,
+    top: topHeight,
+    bottom: canvas.height - topHeight - gap
+  });
+}
+
+function resetGame(){
+  velocity = 0;
+  birdY = canvas.height/2;
+  pipes = [];
+  frame = 0;
+  score = 0;
+  gameOver = false;
+  document.getElementById("restart").style.display="none";
+}
+
+function update(){
+  if(gameOver) return;
+
+  velocity += gravity;
+  birdY += velocity;
+
+  if(frame % 90 === 0){
+    spawnPipe();
+  }
+
+  pipes.forEach(pipe=>{
+    pipe.x -= 3;
+
+    if(
+      birdX < pipe.x + pipeWidth &&
+      birdX + birdSize > pipe.x &&
+      (birdY < pipe.top || birdY + birdSize > pipe.top + gap)
+    ){
+      gameOver = true;
+      document.getElementById("restart").style.display="block";
+    }
+
+    if(pipe.x + pipeWidth === birdX){
+      score++;
+      document.getElementById("score").innerText = score;
+    }
+  });
+
+  if(birdY + birdSize > canvas.height || birdY < 0){
+    gameOver = true;
+    document.getElementById("restart").style.display="block";
+  }
+
+  frame++;
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  pipes.forEach(pipe=>{
+    ctx.fillStyle="#01FFFF";
+    ctx.fillRect(pipe.x,0,pipeWidth,pipe.top);
+    ctx.fillRect(pipe.x,pipe.top+gap,pipeWidth,pipe.bottom);
+  });
+
+  ctx.drawImage(logo,birdX,birdY,birdSize,birdSize);
+}
+
+function loop(){
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+document.addEventListener("keydown", ()=>{
+  velocity = -8;
+});
+
+document.addEventListener("click", ()=>{
+  velocity = -8;
+});
+
+document.getElementById("restart").onclick = resetGame;
+
+loop();
+</script>
+
+</body>
+</html>
