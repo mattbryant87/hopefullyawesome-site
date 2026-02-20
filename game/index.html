@@ -264,6 +264,21 @@ document.addEventListener("click", ()=>{
 async function shareScreenshot(){
   shareHint.textContent = "Preparing screenshot…";
 
+  // Draw final score onto canvas before capturing
+  ctx.fillStyle = "rgba(0,0,0,0.5)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.font = "bold 48px system-ui";
+  ctx.fillText("Hopefully Flappy", canvas.width / 2, canvas.height / 2 - 40);
+
+  ctx.font = "bold 72px system-ui";
+  ctx.fillText(score, canvas.width / 2, canvas.height / 2 + 40);
+
+  ctx.font = "20px system-ui";
+  ctx.fillText("hopefullyawesome.com/game", canvas.width / 2, canvas.height / 2 + 90);
+
   // Make sure the last frame is drawn (usually already is)
   // draw();
 
