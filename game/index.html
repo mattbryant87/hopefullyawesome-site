@@ -56,14 +56,14 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let gravity = 0.5;
+let gravity = 0.35;
 let velocity = 0;
 let birdY = canvas.height/2;
 let birdX = 80;
 let birdSize = 50;
 let pipes = [];
-let pipeWidth = 80;
-let gap = 200;
+let pipeWidth = 70;
+let gap = 260;
 let frame = 0;
 let score = 0;
 let gameOver = false;
@@ -96,12 +96,12 @@ function update(){
   velocity += gravity;
   birdY += velocity;
 
-  if(frame % 90 === 0){
+  if(frame % 120 === 0){
     spawnPipe();
   }
 
   pipes.forEach(pipe=>{
-    pipe.x -= 3;
+    pipe.x -= 2.2;
 
     if(
       birdX < pipe.x + pipeWidth &&
@@ -145,11 +145,11 @@ function loop(){
 }
 
 document.addEventListener("keydown", ()=>{
-  velocity = -8;
+  velocity = -9.5;
 });
 
 document.addEventListener("click", ()=>{
-  velocity = -8;
+  velocity = -9.5;
 });
 
 document.getElementById("restart").onclick = resetGame;
