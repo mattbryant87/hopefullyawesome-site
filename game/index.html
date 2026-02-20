@@ -271,79 +271,77 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 ctx.textAlign = "center";
 
-// --- Dynamic sizing based on canvas width ---
 const centerX = canvas.width / 2;
 const centerY = canvas.height / 2;
 
-// Title scales with width
-const titleSize = Math.min(canvas.width * 0.08, 42);
-ctx.font = `bold ${titleSize}px system-ui`;
+// --- Dynamic sizing ---
+const titleSize = Math.min(canvas.width * 0.08, 40);
+const scoreSize = Math.min(canvas.width * 0.22, 120);
+const labelSize = Math.min(canvas.width * 0.06, 28);
+
+// Total vertical stack height (estimate)
+const stackHeight =
+  titleSize +
+  20 +
+  scoreSize +
+  20 +
+  labelSize +
+  20 +
+  20 +   // "Can you beat it?"
+  18;    // URL
+
+let currentY = centerY - stackHeight / 2;
+
+// ---- TITLE ----
 ctx.fillStyle = "#ffffff";
-ctx.fillText("HOPEFULLY FLAPPY", centerX, centerY - 110);
+ctx.font = `bold ${titleSize}px system-ui`;
+ctx.fillText("HOPEFULLY FLAPPY", centerX, currentY);
+currentY += titleSize + 25;
 
-// --- Spotlight glow behind score ---
-const glowRadius = Math.min(canvas.width * 0.22, 140);
-const glowY = centerY + 5;
+// ---- BADGE ----
+const badgeR = scoreSize * 0.6;
+const badgeCenterY = currentY + scoreSize / 2;
 
-const glow = ctx.createRadialGradient(centerX, glowY, 10, centerX, glowY, glowRadius);
-glow.addColorStop(0, "rgba(1,255,255,0.35)");
-glow.addColorStop(1, "rgba(1,255,255,0)");
-
-ctx.fillStyle = glow;
-ctx.beginPath();
-ctx.arc(centerX, glowY, glowRadius, 0, Math.PI * 2);
-ctx.fill();
-  
-// --- Award badge behind score ---
-const badgeR = Math.min(canvas.width * 0.18, 110);
-const badgeY = centerY + 5;
-
-// outer glow ring
+// glow
 ctx.save();
 ctx.shadowColor = "rgba(1,255,255,0.45)";
-ctx.shadowBlur = 22;
-
+ctx.shadowBlur = 25;
 ctx.fillStyle = "rgba(255,255,255,0.06)";
 ctx.beginPath();
-ctx.arc(centerX, badgeY, badgeR, 0, Math.PI * 2);
+ctx.arc(centerX, badgeCenterY, badgeR, 0, Math.PI * 2);
 ctx.fill();
 ctx.restore();
 
-// ring stroke
+// ring
 ctx.lineWidth = 6;
-ctx.strokeStyle = "rgba(1,255,255,0.65)";
+ctx.strokeStyle = "rgba(1,255,255,0.7)";
 ctx.beginPath();
-ctx.arc(centerX, badgeY, badgeR, 0, Math.PI * 2);
+ctx.arc(centerX, badgeCenterY, badgeR, 0, Math.PI * 2);
 ctx.stroke();
 
-// inner ring
-ctx.lineWidth = 2;
-ctx.strokeStyle = "rgba(255,255,255,0.35)";
-ctx.beginPath();
-ctx.arc(centerX, badgeY, badgeR - 12, 0, Math.PI * 2);
-ctx.stroke();
-  
-// Big score scales larger
-const scoreSize = Math.min(canvas.width * 0.22, 120);
-ctx.font = `bold ${scoreSize}px system-ui`;
+// score
 ctx.fillStyle = "#01FFFF";
-ctx.fillText(score, centerX, centerY + 10);
+ctx.font = `bold ${scoreSize}px system-ui`;
+ctx.fillText(score, centerX, badgeCenterY + scoreSize / 3);
 
-// Points label
-const labelSize = Math.min(canvas.width * 0.06, 32);
-ctx.font = `bold ${labelSize}px system-ui`;
+currentY += scoreSize + 25;
+
+// ---- POINTS ----
 ctx.fillStyle = "#ffffff";
-ctx.fillText("POINTS!", centerX, centerY + 60);
+ctx.font = `bold ${labelSize}px system-ui`;
+ctx.fillText("POINTS!", centerX, currentY);
+currentY += labelSize + 20;
 
-// Challenge line
-ctx.font = `20px system-ui`;
+// ---- CHALLENGE ----
+ctx.font = "20px system-ui";
 ctx.fillStyle = "rgba(255,255,255,0.85)";
-ctx.fillText("Can you beat it?", centerX, centerY + 105);
+ctx.fillText("Can you beat it?", centerX, currentY);
+currentY += 25;
 
-// URL (subtle)
-ctx.font = `18px system-ui`;
+// ---- URL ----
+ctx.font = "18px system-ui";
 ctx.fillStyle = "rgba(255,255,255,0.6)";
-ctx.fillText("hopefullyawesome.com/game", centerX, centerY + 140);
+ctx.fillText("hopefullyawesome.com/game", centerX, currentY);
   // Make sure the last frame is drawn (usually already is)
   // draw();
 
