@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flappy HA</title>
+<title>Hopefully Flappy</title>
 <style>
 body{
   margin:0;
@@ -27,26 +27,90 @@ canvas{
   font-size:28px;
   font-weight:bold;
 }
+#overlay{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+}
+
+#card{
+  width: min(420px, 92vw);
+  border-radius: 18px;
+  padding: 18px 16px 14px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.55);
+  text-align: center;
+}
+
+#gameover{
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px;
+}
+
+#finalScore{
+  font-size: 44px;
+  font-weight: 900;
+  margin: 6px 0 14px;
+}
+
+.actions{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+#restart, #shareBtn{
+  padding: 12px 16px;
+  border: none;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
 
 #restart{
-  position:fixed;
-  top:60%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  display:none;
-  padding:12px 20px;
-  background:#01FFFF;
-  color:black;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
+  background: #01FFFF;
+  color: #000;
 }
+
+#shareBtn{
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.22);
+}
+
+#shareHint{
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.70);
+}
+
 </style>
 </head>
 <body>
 
 <div id="score">0</div>
-<button id="restart">Play Again</button>
+<div id="overlay">
+  <div id="card">
+    <div id="gameover">Game Over</div>
+    <div id="finalScore">Score: 0</div>
+
+    <div class="actions">
+      <button id="shareBtn">Share Score</button>
+      <button id="restart">Play Again</button>
+    </div>
+
+    <div id="shareHint"></div>
+  </div>
+</div>
 <canvas id="game"></canvas>
 
 <script>
@@ -68,6 +132,21 @@ let frame = 0;
 let score = 0;
 let gameOver = false;
 
+const overlay = document.getElementById("overlay");
+const finalScoreEl = document.getElementById("finalScore");
+const shareBtn = document.getElementById("shareBtn");
+const shareHint = document.getElementById("shareHint");
+
+function showGameOver(){
+  finalScoreEl.textContent = `Score: ${score}`;
+  overlay.style.display = "flex";
+}
+
+function hideGameOver(){
+  overlay.style.display = "none";
+  shareHint.textContent = "";
+}
+  
 const PIPE_COLORS = ["#01FFFF", "#F71E99"]; // blue then pink
 let pipeCount = 0;
   
@@ -114,6 +193,7 @@ function resetGame(){
   gameOver = false;
   pickRandomLogo();
   document.getElementById("restart").style.display="none";
+  hideGameOver();
 }
 
 function update(){
@@ -135,6 +215,7 @@ function update(){
       (birdY < pipe.top || birdY + birdSize > pipe.top + gap)
     ){
       gameOver = true;
+      showGameOver();
       document.getElementById("restart").style.display="block";
     }
 
@@ -147,6 +228,7 @@ function update(){
 
   if(birdY + birdSize > canvas.height || birdY < 0){
     gameOver = true;
+    showGameOver();
     document.getElementById("restart").style.display="block";
   }
 
@@ -179,6 +261,48 @@ document.addEventListener("click", ()=>{
   velocity = -9.5;
 });
 
+async function shareScreenshot(){
+  shareHint.textContent = "Preparing screenshot…";
+
+  // Make sure the last frame is drawn (usually already is)
+  // draw();
+
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+
+  if(!blob){
+    shareHint.textContent = "Couldn’t create screenshot. Try again.";
+    return;
+  }
+
+  const file = new File([blob], `hopefully-flappy-score-${score}.png`, { type: "image/png" });
+
+  const shareData = {
+    title: "Hopefully Flappy",
+    text: `I scored ${score} in Hopefully Flappy 😅`,
+    files: [file]
+  };
+
+  // Native share if supported
+  if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    try{
+      await navigator.share(shareData);
+      shareHint.textContent = "Shared!";
+      return;
+    }catch(e){
+      // user canceled share – no big deal
+      shareHint.textContent = "Share canceled.";
+      return;
+    }
+  }
+
+  // Fallback: open the image in a new tab so you can Save/Share manually
+  const url = URL.createObjectURL(blob);
+  window.open(url, "_blank");
+  shareHint.textContent = "Opened screenshot in a new tab (save/share it there).";
+}
+
+shareBtn.addEventListener("click", shareScreenshot);
+  
 document.getElementById("restart").onclick = resetGame;
 
 loop();
