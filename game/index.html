@@ -271,25 +271,37 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 ctx.textAlign = "center";
 
-// Title (smaller, cleaner)
-ctx.fillStyle = "#ffffff";
-ctx.font = "bold 42px system-ui";
-ctx.fillText("HOPEFULLY FLAPPY", canvas.width / 2, canvas.height / 2 - 110);
+// --- Dynamic sizing based on canvas width ---
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
 
-// Big score (hero element)
-ctx.font = "bold 120px system-ui";
+// Title scales with width
+const titleSize = Math.min(canvas.width * 0.08, 42);
+ctx.font = `bold ${titleSize}px system-ui`;
+ctx.fillStyle = "#ffffff";
+ctx.fillText("HOPEFULLY FLAPPY", centerX, centerY - 110);
+
+// Big score scales larger
+const scoreSize = Math.min(canvas.width * 0.22, 120);
+ctx.font = `bold ${scoreSize}px system-ui`;
 ctx.fillStyle = "#01FFFF";
-ctx.fillText(score, canvas.width / 2, canvas.height / 2 + 10);
+ctx.fillText(score, centerX, centerY + 10);
 
 // Points label
-ctx.font = "bold 32px system-ui";
+const labelSize = Math.min(canvas.width * 0.06, 32);
+ctx.font = `bold ${labelSize}px system-ui`;
 ctx.fillStyle = "#ffffff";
-ctx.fillText("POINTS!", canvas.width / 2, canvas.height / 2 + 60);
+ctx.fillText("POINTS!", centerX, centerY + 60);
 
-// Footer challenge
-ctx.font = "20px system-ui";
-ctx.fillStyle = "rgba(255,255,255,0.8)";
-ctx.fillText("Can you beat it?", canvas.width / 2, canvas.height / 2 + 110);
+// Challenge line
+ctx.font = `20px system-ui`;
+ctx.fillStyle = "rgba(255,255,255,0.85)";
+ctx.fillText("Can you beat it?", centerX, centerY + 105);
+
+// URL (subtle)
+ctx.font = `18px system-ui`;
+ctx.fillStyle = "rgba(255,255,255,0.6)";
+ctx.fillText("hopefullyawesome.com/game", centerX, centerY + 140);
   // Make sure the last frame is drawn (usually already is)
   // draw();
 
