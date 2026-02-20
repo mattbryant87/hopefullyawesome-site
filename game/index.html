@@ -264,20 +264,30 @@ document.addEventListener("click", ()=>{
 async function shareScreenshot(){
   shareHint.textContent = "Preparing screenshot…";
 
-  // Draw final score onto canvas before capturing
-  ctx.fillStyle = "rgba(0,0,0,0.5)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Darken background
+ctx.fillStyle = "rgba(0,0,0,0.6)";
+ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.font = "bold 48px system-ui";
-  ctx.fillText("Hopefully Flappy", canvas.width / 2, canvas.height / 2 - 40);
+// Center text
+ctx.textAlign = "center";
+ctx.fillStyle = "#ffffff";
 
-  ctx.font = "bold 72px system-ui";
-  ctx.fillText(score, canvas.width / 2, canvas.height / 2 + 40);
+// Title
+ctx.font = "bold 60px system-ui";
+ctx.fillText("HOPEFULLY FLAPPY", canvas.width / 2, canvas.height / 2 - 120);
 
-  ctx.font = "20px system-ui";
-  ctx.fillText("hopefullyawesome.com/game", canvas.width / 2, canvas.height / 2 + 90);
+// Subheading
+ctx.font = "bold 28px system-ui";
+ctx.fillText("I SCORED", canvas.width / 2, canvas.height / 2 - 40);
+
+// Big score
+ctx.font = "bold 110px system-ui";
+ctx.fillText(score, canvas.width / 2, canvas.height / 2 + 70);
+
+// Footer line
+ctx.font = "20px system-ui";
+ctx.fillStyle = "rgba(255,255,255,0.8)";
+ctx.fillText("on hopefullyawesome.com/game", canvas.width / 2, canvas.height / 2 + 120);
 
   // Make sure the last frame is drawn (usually already is)
   // draw();
