@@ -281,6 +281,28 @@ ctx.font = `bold ${titleSize}px system-ui`;
 ctx.fillStyle = "#ffffff";
 ctx.fillText("HOPEFULLY FLAPPY", centerX, centerY - 110);
 
+// --- Badge rays behind score ---
+const rayCount = 18;
+const innerR = Math.min(canvas.width * 0.11, 70);
+const outerR = Math.min(canvas.width * 0.22, 140);
+const rayY = centerY + 5;
+
+ctx.save();
+ctx.translate(centerX, rayY);
+ctx.globalAlpha = 0.22;
+ctx.fillStyle = "rgba(1,255,255,1)";
+
+for (let i = 0; i < rayCount; i++) {
+  ctx.rotate((Math.PI * 2) / rayCount);
+  ctx.beginPath();
+  ctx.moveTo(innerR, -6);
+  ctx.lineTo(outerR, 0);
+  ctx.lineTo(innerR, 6);
+  ctx.closePath();
+  ctx.fill();
+}
+ctx.restore();
+  
 // Big score scales larger
 const scoreSize = Math.min(canvas.width * 0.22, 120);
 ctx.font = `bold ${scoreSize}px system-ui`;
