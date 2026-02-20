@@ -1,5 +1,8 @@
 <!doctype html>
 <html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-JZRWFTHLVM"></script>
 <script>
@@ -9,9 +12,6 @@
 
   gtag('config', 'G-JZRWFTHLVM');
 </script>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hopefully Flappy</title>
 <style>
 body{
@@ -210,9 +210,9 @@ function resetGame(){
   gameOver = false;
   document.getElementById("score").innerText = 0;
   pickRandomLogo();
-  document.getElementById("restart").style.display="none";
   hideGameOver();
   gameStarted = false;
+  track("play_again", { game: "hopefully_flappy" });
 }
 
 function update(){
@@ -235,7 +235,6 @@ function update(){
     ){
       gameOver = true;
       showGameOver();
-      document.getElementById("restart").style.display="block";
     }
 
     if(!pipe.passed && pipe.x + pipeWidth < birdX){
@@ -248,7 +247,6 @@ function update(){
   if(birdY + birdSize > canvas.height || birdY < 0){
     gameOver = true;
     showGameOver();
-    document.getElementById("restart").style.display="block";
   }
 
   frame++;
